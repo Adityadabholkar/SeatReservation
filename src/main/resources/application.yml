@@ -1,0 +1,43 @@
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  tomcat:
+    max-keep-alive-requests: -1
+    keep-alive-timeout: 60s
+    threads:
+      max: ${TOMCAT_MAX_THREADS:200}
+    accept-count: 10000
+    max-connections: 20000
+    connection-timeout: 60s
+
+spring:
+  application:
+    name: seat-reservation
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  flyway:
+    enabled: true
+
+app:
+  admin-token: ${ADMIN_TOKEN:admin-secret}
+  log-requests: ${LOG_REQUESTS:true}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  structured:
+    format:
+      console: logstash
+  level:
+    root: INFO

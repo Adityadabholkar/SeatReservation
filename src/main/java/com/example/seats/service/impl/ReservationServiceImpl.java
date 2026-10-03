@@ -121,6 +121,11 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         if (!taken.isEmpty()) {
+            // the original request with this key may have committed since step 1; if so this is a replay
+            Optional<ReservationRecord> late = reservations.findByUserAndKey(userId, key);
+            if (late.isPresent()) {
+                return replay(late.get(), hash);
+            }
             throw DeclineException.seatTaken(taken);
         }
 

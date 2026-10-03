@@ -4,7 +4,7 @@ A small Spring Boot service that sells assigned seats for a show. The goal is si
 
 Stack: Java 21, Spring Boot 3.5, PostgreSQL 16, Flyway, Micrometer (Prometheus format), Docker.
 
-Live URL: `https://<your-service>.onrender.com`
+Live URL: `https://seat-reservation-dl0r.onrender.com`
 
 ## Running it
 
@@ -129,7 +129,22 @@ metrics counters and gauges matched the API
 ALL CHECKS PASSED
 ```
 
-Result against the deployed service: `<paste the output of your run against the live URL here>`
+
+Result against the deployed service (free tier, 3000 requests, concurrency 100). The free instance is slow, about 25-40 requests a second, so this is a smaller run than the local one:
+
+```
+201 confirmed                 620
+200 idempotent-replay         111
+409 seat_taken               5144
+409 per_user_limit_exceeded     6
+409 idempotency_key_reused      1
+5xx                             0
+client errors                   0
+double-sold seats               0
+available + held + confirmed == total on both shows
+metrics counters and gauges matched the API
+ALL CHECKS PASSED
+```
 
 There is also a Postman collection, `seat-reservation.postman_collection.json`, that checks each rule one request at a time. It cannot prove anything about races, which is what the burst script is for.
 

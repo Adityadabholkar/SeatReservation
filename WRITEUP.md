@@ -43,6 +43,7 @@ When two requests with the same key arrive together, the second INSERT waits on 
 Two choices worth stating. A replay returns 200 rather than 201, so that every seat produces exactly one 201 and the hot-seat counts are clean. And a request that is declined rolls back completely and leaves no key behind, so the client can retry it later and it is judged again from scratch.
 
 The key is scoped to the user, so two users using the same key string do not interfere.
+The first burst against the deployed service found a race where a retry could see the seat as taken before the original request's key was visible. I fixed it by looking the key up again before returning a decline.
 
 ## Holds and expiry
 
